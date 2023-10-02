@@ -1,7 +1,20 @@
 from pyspark.sql import SparkSession
 
 ### Setup: Create a SparkSession
-spark = None
+spark = SparkSession.builder \
+    .appName("myApp") \
+    .master("local[1]") \
+    .getOrCreate()
+
+reviews = spark.read.csv("resources/reviews.tsv.gz", sep=",", header=True )
+
+reviews.printSchema()
+
+# reviews.createOrReplaceTempView("revs")
+
+
+
+spark.stop()
 
 # For Windows users, quiet errors about not being able to delete temporary directories which make your logs impossible to read...
 logger = spark.sparkContext._jvm.org.apache.log4j
